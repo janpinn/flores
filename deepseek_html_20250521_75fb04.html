@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carta de Amor con Girasoles</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #fffaf0;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            color: #5a3e36;
+            overflow-x: hidden;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+        }
+        
+        h1 {
+            color: #e67e22;
+            margin-bottom: 30px;
+        }
+        
+        .letter {
+            background-color: #fff;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+            position: relative;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.5s, transform 0.5s;
+        }
+        
+        .letter.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .sunflower {
+            font-size: 30px;
+            cursor: pointer;
+            display: inline-block;
+            transition: transform 0.3s;
+            margin: 10px;
+        }
+        
+        .sunflower:hover {
+            transform: scale(1.2) rotate(10deg);
+        }
+        
+        .sunflower-field {
+            margin: 30px 0;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        button {
+            background-color: #e67e22;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s;
+            margin: 10px;
+        }
+        
+        button:hover {
+            background-color: #d35400;
+        }
+        
+        .hidden-message {
+            display: none;
+            margin-top: 20px;
+            font-style: italic;
+            color: #e74c3c;
+        }
+        
+        .hearts {
+            position: absolute;
+            font-size: 20px;
+            color: #e74c3c;
+            pointer-events: none;
+            animation: float 4s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-20px) rotate(10deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Para alguien especial 🌻</h1>
+        
+        <div class="sunflower-field" id="sunflowerField">
+            <!-- Los girasoles se generarán aquí -->
+        </div>
+        
+        <button id="showLetterBtn">Abrir carta</button>
+        <button id="addSunflowerBtn">Añadir girasol</button>
+        
+        <div class="letter" id="loveLetter">
+            <p>Querida persona especial,</p>
+            <p>Hoy, como cada día, pienso en ti con el mismo cariño con el que el sol mira a los girasoles.</p>
+            <p>Eres la luz que ilumina mis días y la razón por la que mi corazón florece.</p>
+            <p>Por eso te envío estos girasoles, símbolo de alegría y constancia, como mi amor por ti.</p>
+            <p>Con todo mi cariño,</p>
+            <p>❤️</p>
+            
+            <div class="hidden-message" id="hiddenMessage">
+                <p>P.D.: Haz clic en los girasoles para descubrir un mensaje secreto.</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const loveLetter = document.getElementById('loveLetter');
+            const showLetterBtn = document.getElementById('showLetterBtn');
+            const addSunflowerBtn = document.getElementById('addSunflowerBtn');
+            const sunflowerField = document.getElementById('sunflowerField');
+            const hiddenMessage = document.getElementById('hiddenMessage');
+            
+            // Mostrar carta con animación
+            showLetterBtn.addEventListener('click', function() {
+                loveLetter.classList.add('show');
+                this.textContent = loveLetter.classList.contains('show') ? 'Ocultar carta' : 'Abrir carta';
+            });
+            
+            // Añadir girasoles
+            addSunflowerBtn.addEventListener('click', function() {
+                createSunflower();
+            });
+            
+            // Crear girasoles iniciales
+            for (let i = 0; i < 5; i++) {
+                createSunflower();
+            }
+            
+            function createSunflower() {
+                const sunflower = document.createElement('div');
+                sunflower.className = 'sunflower';
+                sunflower.innerHTML = '🌻';
+                sunflower.style.transform = `rotate(${Math.random() * 30 - 15}deg)`;
+                
+                sunflower.addEventListener('click', function() {
+                    this.style.transform = `scale(${Math.random() * 0.5 + 1}) rotate(${Math.random() * 360}deg)`;
+                    hiddenMessage.style.display = 'block';
+                    
+                    // Crear corazones flotantes
+                    createHearts(this);
+                });
+                
+                sunflowerField.appendChild(sunflower);
+            }
+            
+            function createHearts(element) {
+                const rect = element.getBoundingClientRect();
+                const x = rect.left + rect.width / 2;
+                const y = rect.top + rect.height / 2;
+                
+                for (let i = 0; i < 5; i++) {
+                    const heart = document.createElement('div');
+                    heart.className = 'hearts';
+                    heart.innerHTML = '❤️';
+                    heart.style.left = `${x}px`;
+                    heart.style.top = `${y}px`;
+                    heart.style.animationDuration = `${Math.random() * 3 + 2}s`;
+                    heart.style.animationDelay = `${Math.random() * 0.5}s`;
+                    heart.style.opacity = Math.random() * 0.5 + 0.5;
+                    
+                    document.body.appendChild(heart);
+                    
+                    // Eliminar el corazón después de la animación
+                    setTimeout(() => {
+                        heart.remove();
+                    }, 4000);
+                }
+            }
+        });
+    </script>
+</body>
+</html>
